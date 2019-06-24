@@ -43,7 +43,10 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: Buy some milk' for row in rows))
+        self.assertTrue(
+            any(row.text == '1: Buy some milk' for row in rows),
+            'New list element not show in list'
+        )
 
         # Text field still able to add anothe element
         self.fail('Закончить тест!')
