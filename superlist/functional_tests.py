@@ -15,6 +15,12 @@ class NewVisitorTest(unittest.TestCase):
         '''Демонтаж'''
         self.browser.quit()
 
+    def check_for_row_in_list_table(self, row_text):
+        '''находим строку в таблице скписка'''
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_a_list_and_retrieve_it_later(self):
         '''Тест: начинаем список и можем получить его позже'''
 
@@ -41,9 +47,7 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(2)
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Buy some milk', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Buy some milk')
 
         # Text field still able to add anothe element
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -54,10 +58,8 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         # Page refresh. Both elements show.
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Buy some milk', [row.text for row in rows])
-        self.assertIn('2: Make scrambled eggs', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Buy some milk')
+        self.check_for_row_in_list_table('2: Make scrambled eggs')
 
         # Website generate new unic URL-adress for every user. User see popup
         # message to explain this behaviour.
