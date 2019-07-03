@@ -1,10 +1,11 @@
+import time
+
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
-import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     '''Тест нового посетителя'''
 
     def setUp(self):
@@ -25,13 +26,13 @@ class NewVisitorTest(unittest.TestCase):
         '''Тест: начинаем список и можем получить его позже'''
 
         # User open homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # Title say to user that it To-Do list webpage
         self.assertIn('To-Do', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('To-Do', header_text)
-        
+
         # User enter new list element
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(
@@ -69,4 +70,5 @@ class NewVisitorTest(unittest.TestCase):
         # User quit.
         self.fail('Закончить тест!')
 if __name__ == '__main__':
-    unittest.main(warnings='ignore')
+    # unittest.main(warnings='ignore')
+    pass
