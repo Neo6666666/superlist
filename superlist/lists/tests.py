@@ -11,15 +11,41 @@ class HomePageTest(TestCase):
     """Home page test"""
 
     def test_homepage_returns_correct_html(self):
-        "Test: Home page returns correct HTML"
+        """Test: Home page returns correct HTML"""
         response = self.client.get('/')
+
         self.assertTemplateUsed(response, 'lists/home.html')
 
     def test_can_save_post_request(self):
         """Test: We can save a POST request"""
+        self.client.post('/', data={'item_text': 'A new list item'})
+        new_item = Item.objects.first()
+
+        self.assertEqual(Item.objects.count(), 1)
+        self.assertEqual(new_item.text, 'A new list item')
+
+    def test_redirects_after_post(self):
+        """Test: Redirects after POST"""
         response = self.client.post('/', data={'item_text': 'A new list item'})
-        self.assertIn('A new list item', response.content.decode())
-        self.assertTemplateUsed(response, 'lists/home.html')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+    
+    def test_only_saves_items_when_necessary(self):
+        """Test: Save items only when necessary"""
+        self.client.get('/')
+        self.assertEqual(Item.objects.count(), 0)
+    
+    def test_displays_all_list_items(self):
+        """Test: Displays all list items"""
+        Item.objects.create(text='itemey 1')
+        Item.objects.create(text='itemey 2')
+
+        response = self.client.get('/')
+
+        self.assertIn('itemey 1', response.content.decode())
+        self.assertIn('itemey 2', response.content.decode())
+
 
 class ItemModelTest(TestCase):
     """Listitem model test"""
@@ -35,9 +61,9 @@ class ItemModelTest(TestCase):
         second_item.save()
 
         saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 2)
-
         first_saved_item = saved_items[0]
         second_saved_items = saved_items[1]
+
+        self.assertEqual(saved_items.count(), 2)
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_items.text, 'Item the second')
