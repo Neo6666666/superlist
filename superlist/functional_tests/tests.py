@@ -91,8 +91,8 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Now new user enter the main page
 
-        ## We use new browser seans. To make shure what not cookies nor  
-        ## anything will not bother us.
+        # - We use new browser seans. To make shure what not cookies nor
+        # - anything will not bother us.
         self.browser.quit()
         self.browser = webdriver.Firefox()
 
