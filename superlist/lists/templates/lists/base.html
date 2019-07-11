@@ -1,0 +1,29 @@
+{% load static %}
+<html>
+    <head>
+        <title>To-Do lists</title>
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstrap/css/base.css' %}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 offset-md-2 offset-lg-2 jumbotron">
+                    <div class="text-center">
+                        <h1>{% block header_text %}{% endblock %}</h1>
+                        <form method="post" action="{% block form_action %}{% endblock %}">
+                            {% csrf_token %}
+                            <input name="item_text" id="id_new_item" class="form-control form-control-lg" placeholder="Enter a to-do item"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    {% block table %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
